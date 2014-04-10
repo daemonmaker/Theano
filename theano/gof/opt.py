@@ -1822,15 +1822,14 @@ class EquilibriumOptimizer(NavigatorOptimizer):
         loop_timing = merge_list(prof1[1], prof2[1])
 
         loop_process_count = list(prof1[2])
-        for i in range(len(loop_process_count)):
+        for i in range(min(len(loop_process_count), len(prof2[2]))):
             process_count = loop_process_count[i]
             for process, count in prof2[2][i].iteritems():
                 if process in process_count:
                     process_count[process] += count
                 else:
                     process_count[process] = count
-        for i in range(len(loop_process_count), len(prof2[2])):
-            loop_process_count.append(list(prof2[2]))
+        loop_process_count.extend(prof2[2][len(loop_process_count):])
 
         max_nb_nodes = max(prof1[3], prof2[3])
 
